@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare - Car Sharing Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sky-blue': '#87CEEB',
+                        'sky-blue-dark': '#4A90E2',
+                        'sky-blue-light': '#E0F4FF'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50">
+    <!-- @COMPONENT: MobileNavigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-sky-blue-dark">RideShare</h1>
+                    </div>
+                </div>
+                
+                <!-- User Profile Section -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="bg-sky-blue-light p-2 rounded-full">
+                            <i class="fas fa-bell text-sky-blue-dark"></i>
+                        </button>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <!-- Professional headshot of a smiling woman -->
+                        <img src="https://pixabay.com/get/g2dc83932b050b249e3b19e99fa9c3de664ed2b4f36162b973c80951ee36c3119d1af6c05184ddbae4056c47a6ef513e44f04028974eac04dc5e5933546c450bc_1280.jpg" 
+                             alt="User profile" class="w-8 h-8 rounded-full object-cover border-2 border-sky-blue">
+                        <div class="hidden sm:block">
+                            <p class="text-sm font-medium text-gray-700" data-bind="user.name">Sarah Johnson</p>
+                            <p class="text-xs text-gray-500">4.9 ⭐</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: MobileNavigation -->
+
+    <!-- @COMPONENT: MainDashboard -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Mode Toggle Section -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex items-center justify-center">
+                <div class="bg-gray-100 p-1 rounded-lg inline-flex">
+                    <button id="passengerMode" class="px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 bg-sky-blue text-white">
+                        <i class="fas fa-user mr-2"></i>Find a Ride
+                    </button>
+                    <button id="driverMode" class="px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-car mr-2"></i>Offer a Ride
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- @STATE: activeMode:string = 'passenger' -->
+        <!-- Passenger Mode Content -->
+        <div id="passengerContent" class="space-y-6">
+            
+            <!-- Search Section -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Find Your Perfect Ride</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">From</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Enter pickup location" 
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                            <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-sky-blue"></i>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">To</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Enter destination" 
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                            <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-red-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                        <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                        <input type="time" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Passengers</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                            <option>1 passenger</option>
+                            <option>2 passengers</option>
+                            <option>3 passengers</option>
+                            <option>4 passengers</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-sky-blue hover:bg-sky-blue-dark text-white font-semibold py-3 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-search mr-2"></i>Search Rides
+                </button>
+            </div>
+
+            <!-- Available Rides -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-gray-800">Available Rides</h3>
+                
+                <!-- @MAP: availableRides.map(ride => ( -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-sky-blue hover:shadow-md transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <!-- Professional headshot of a smiling man -->
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                                     alt="Driver profile" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800" data-bind="ride.driver.name">Michael Chen</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-yellow-500">⭐ 4.8</span>
+                                        <span class="text-gray-500 text-sm">(127 rides)</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                            <i class="fas fa-check-circle mr-1"></i>Verified
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                                <div>
+                                    <div class="flex items-center text-gray-600 mb-1">
+                                        <i class="fas fa-map-marker-alt text-sky-blue mr-2"></i>
+                                        <span class="text-sm">San Francisco → Los Angeles</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-clock text-sky-blue mr-2"></i>
+                                        <span class="text-sm">Dec 15, 2024 at 8:00 AM</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center text-gray-600 mb-1">
+                                        <i class="fas fa-car text-sky-blue mr-2"></i>
+                                        <span class="text-sm">Toyota Camry - Blue</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-users text-sky-blue mr-2"></i>
+                                        <span class="text-sm">2 of 4 seats available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-end space-y-3 mt-4 md:mt-0">
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-sky-blue-dark">$45</div>
+                                <div class="text-sm text-gray-500">per person</div>
+                            </div>
+                            <button class="bg-sky-blue hover:bg-sky-blue-dark text-white px-6 py-2 rounded-lg font-medium transition duration-300">
+                                Request Ride
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+
+                <!-- Second ride example -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-sky-blue hover:shadow-md transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <!-- Professional headshot of a smiling woman with glasses -->
+                                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                                     alt="Driver profile" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Emma Rodriguez</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-yellow-500">⭐ 4.9</span>
+                                        <span class="text-gray-500 text-sm">(89 rides)</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                            <i class="fas fa-check-circle mr-1"></i>Verified
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                                <div>
+                                    <div class="flex items-center text-gray-600 mb-1">
+                                        <i class="fas fa-map-marker-alt text-sky-blue mr-2"></i>
+                                        <span class="text-sm">San Francisco → Los Angeles</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-clock text-sky-blue mr-2"></i>
+                                        <span class="text-sm">Dec 15, 2024 at 9:30 AM</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center text-gray-600 mb-1">
+                                        <i class="fas fa-car text-sky-blue mr-2"></i>
+                                        <span class="text-sm">Honda Accord - Silver</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-users text-sky-blue mr-2"></i>
+                                        <span class="text-sm">3 of 3 seats available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-end space-y-3 mt-4 md:mt-0">
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-sky-blue-dark">$42</div>
+                                <div class="text-sm text-gray-500">per person</div>
+                            </div>
+                            <button class="bg-sky-blue hover:bg-sky-blue-dark text-white px-6 py-2 rounded-lg font-medium transition duration-300">
+                                Request Ride
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Mode Content (Initially Hidden) -->
+        <div id="driverContent" class="space-y-6 hidden">
+            
+            <!-- Create Ride Form -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Create a New Ride</h2>
+                
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">From</label>
+                            <div class="relative">
+                                <input type="text" placeholder="Departure location" 
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                                <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-sky-blue"></i>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">To</label>
+                            <div class="relative">
+                                <input type="text" placeholder="Destination" 
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                                <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-red-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Departure Time</label>
+                            <input type="time" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Available Seats</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                                <option>1 seat</option>
+                                <option>2 seats</option>
+                                <option>3 seats</option>
+                                <option>4 seats</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price per Seat</label>
+                            <div class="relative">
+                                <input type="number" placeholder="0" 
+                                       class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Vehicle</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                                <option>Select your vehicle</option>
+                                <option>Toyota Camry - Blue (ABC123)</option>
+                                <option>Honda Civic - White (XYZ789)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+                        <textarea rows="3" placeholder="Any special instructions or preferences..."
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-sky-blue hover:bg-sky-blue-dark text-white font-semibold py-3 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-plus mr-2"></i>Create Ride
+                    </button>
+                </form>
+            </div>
+
+            <!-- Active Rides -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Active Rides</h3>
+                
+                <div class="space-y-4">
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-medium text-gray-800">San Francisco → Los Angeles</h4>
+                                <p class="text-sm text-gray-600">Dec 20, 2024 at 10:00 AM</p>
+                            </div>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">2 Booked</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-600">
+                                <span>3 seats available • $48/seat</span>
+                            </div>
+                            <div class="space-x-2">
+                                <button class="text-sky-blue hover:text-sky-blue-dark text-sm font-medium">View Details</button>
+                                <button class="text-red-500 hover:text-red-700 text-sm font-medium">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ride Requests -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Pending Requests</h3>
+                
+                <div class="space-y-4">
+                    <div class="border border-sky-blue-light rounded-lg p-4 bg-sky-blue-light bg-opacity-10">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <!-- Professional headshot of a smiling young man -->
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                                     alt="Passenger profile" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-medium text-gray-800">David Park</h4>
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-yellow-500 text-sm">⭐ 4.7</span>
+                                        <span class="text-gray-500 text-xs">(23 rides)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="bg-sky-blue hover:bg-sky-blue-dark text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300">
+                                    Accept
+                                </button>
+                                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition duration-300">
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3 text-sm text-gray-600">
+                            <p>Requesting 1 seat for SF → LA on Dec 20, 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: MainDashboard -->
+
+    <!-- @COMPONENT: FloatingActionButton -->
+    <div class="fixed bottom-6 right-6">
+        <button class="bg-sky-blue hover:bg-sky-blue-dark text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+    <!-- @END_COMPONENT: FloatingActionButton -->
+
+    <!-- @COMPONENT: ChatModal (Hidden by default) -->
+    <div id="chatModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md h-96 flex flex-col">
+                <!-- Chat Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <div class="flex items-center space-x-3">
+                        <!-- Professional headshot of a smiling man -->
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                             alt="Chat partner" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <h3 class="font-medium text-gray-800">Michael Chen</h3>
+                            <p class="text-sm text-green-500">Online</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="flex-1 p-4 overflow-y-auto space-y-3">
+                    <div class="flex justify-start">
+                        <div class="bg-gray-100 rounded-lg px-3 py-2 max-w-xs">
+                            <p class="text-sm">Hi! I'm driving from SF to LA tomorrow. Pick up at 8 AM sharp.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <div class="bg-sky-blue text-white rounded-lg px-3 py-2 max-w-xs">
+                            <p class="text-sm">Perfect! I'll be ready. Where's the pickup location?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-start">
+                        <div class="bg-gray-100 rounded-lg px-3 py-2 max-w-xs">
+                            <p class="text-sm">Union Square, near the Apple Store. I'll share my number closer to the date.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Type a message..." 
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-blue focus:border-transparent">
+                        <button class="bg-sky-blue hover:bg-sky-blue-dark text-white px-4 py-2 rounded-lg transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: ChatModal -->
+
+    <!-- @COMPONENT: ProfileModal (Hidden by default) -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
+                <!-- Profile Header -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800">Profile Details</h2>
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Profile Content -->
+                <div class="p-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <!-- Professional headshot of a smiling man -->
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&h=120" 
+                             alt="User profile" class="w-20 h-20 rounded-full object-cover">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Michael Chen</h3>
+                            <div class="flex items-center space-x-2 mb-2">
+                                <span class="text-yellow-500">⭐ 4.8</span>
+                                <span class="text-gray-600">(127 rides)</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                    <i class="fas fa-check-circle mr-1"></i>ID Verified
+                                </span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                                    <i class="fas fa-phone mr-1"></i>Phone Verified
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">About</h4>
+                            <p class="text-gray-600 text-sm">Experienced driver with over 3 years of ride sharing. I love meeting new people and ensuring safe, comfortable trips for all passengers.</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">Vehicle</h4>
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <p class="text-sm"><strong>2019 Toyota Camry</strong></p>
+                                <p class="text-xs text-gray-600">Blue • License: ABC123 • 4 seats</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">Recent Reviews</h4>
+                            <div class="space-y-2">
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-sm font-medium">Sarah J.</span>
+                                        <span class="text-yellow-500 text-sm">⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">"Great driver, very punctual and friendly!"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Actions -->
+                <div class="p-6 border-t border-gray-200 flex space-x-3">
+                    <button class="flex-1 bg-sky-blue hover:bg-sky-blue-dark text-white py-2 px-4 rounded-lg font-medium transition duration-300">
+                        <i class="fas fa-comment mr-2"></i>Message
+                    </button>
+                    <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition duration-300">
+                        <i class="fas fa-share mr-2"></i>Share Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: ProfileModal -->
+
+    <!-- @COMPONENT: GPSTrackingModal (Hidden by default) -->
+    <div id="gpsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl h-96">
+                <!-- GPS Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <div>
+                        <h3 class="font-medium text-gray-800">Live Trip Tracking</h3>
+                        <p class="text-sm text-gray-600">SF → LA • Est. arrival: 2:30 PM</p>
+                    </div>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Mock Map Area -->
+                <div class="flex-1 bg-gray-100 relative">
+                    <!-- Scenic highway view with GPS overlay feel -->
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=300" 
+                         alt="Live GPS tracking map view" class="w-full h-80 object-cover">
+                    
+                    <!-- GPS Overlay Elements -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="bg-white bg-opacity-90 rounded-lg p-4 shadow-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-sky-blue rounded-full animate-pulse"></div>
+                                <div>
+                                    <p class="text-sm font-medium">Currently on I-5 South</p>
+                                    <p class="text-xs text-gray-600">Next: Exit 405 in 12 miles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Trip Progress -->
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="bg-white rounded-lg p-3 shadow-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium">Trip Progress</span>
+                                <span class="text-sm text-sky-blue-dark">45% Complete</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-sky-blue h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emergency Button -->
+                    <button class="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition duration-300">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: GPSTrackingModal -->
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 md:hidden">
+        <div class="flex justify-around">
+            <button class="flex flex-col items-center py-2 text-sky-blue">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs">Home</span>
+            </button>
+            <button class="flex flex-col items-center py-2 text-gray-400">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs">Search</span>
+            </button>
+            <button class="flex flex-col items-center py-2 text-gray-400">
+                <i class="fas fa-clock mb-1"></i>
+                <span class="text-xs">History</span>
+            </button>
+            <button class="flex flex-col items-center py-2 text-gray-400">
+                <i class="fas fa-user mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // TODO: Implement business logic including API calls, state management, and real-time features
+        
+        (function() {
+            // Mode Toggle Functionality
+            const passengerModeBtn = document.getElementById('passengerMode');
+            const driverModeBtn = document.getElementById('driverMode');
+            const passengerContent = document.getElementById('passengerContent');
+            const driverContent = document.getElementById('driverContent');
+
+            passengerModeBtn.addEventListener('click', function() {
+                passengerModeBtn.className = 'px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 bg-sky-blue text-white';
+                driverModeBtn.className = 'px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 text-gray-600 hover:text-gray-800';
+                passengerContent.classList.remove('hidden');
+                driverContent.classList.add('hidden');
+            });
+
+            driverModeBtn.addEventListener('click', function() {
+                driverModeBtn.className = 'px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 bg-sky-blue text-white';
+                passengerModeBtn.className = 'px-6 py-2 rounded-md text-sm font-medium transition-all duration-300 text-gray-600 hover:text-gray-800';
+                driverContent.classList.remove('hidden');
+                passengerContent.classList.add('hidden');
+            });
+
+            // Modal functionality examples (in real implementation, these would be triggered by user actions)
+            
+            // Chat modal demo
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'c' && e.ctrlKey) {
+                    document.getElementById('chatModal').classList.toggle('hidden');
+                }
+                if (e.key === 'p' && e.ctrlKey) {
+                    document.getElementById('profileModal').classList.toggle('hidden');
+                }
+                if (e.key === 'g' && e.ctrlKey) {
+                    document.getElementById('gpsModal').classList.toggle('hidden');
+                }
+            });
+
+            // Close modals when clicking outside
+            document.querySelectorAll('[id$="Modal"]').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Form submission handling (mock)
+            document.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // TODO: Handle actual form submissions with validation and API calls
+                alert('Form submitted! (This is a mockup - implement actual submission logic)');
+            });
+
+            // Mock notification system
+            function showNotification(message, type = 'info') {
+                // TODO: Implement real-time notification system
+                console.log(`Notification (${type}): ${message}`);
+            }
+
+            // Mock location services
+            function getCurrentLocation() {
+                // TODO: Implement geolocation API integration
+                return { lat: 37.7749, lng: -122.4194 }; // San Francisco coordinates
+            }
+        })();
+    </script>
+</body>
+</html>
