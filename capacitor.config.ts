@@ -4,9 +4,10 @@ const config: CapacitorConfig = {
   appId: 'com.oneroute.app',
   appName: 'One Route',
   webDir: 'dist/public',
-  server: {
-    androidScheme: 'https'
-  },
+server: {
+  url: 'https://auto-share-johanlabuschagn.replit.app',
+  cleartext: true
+}
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
