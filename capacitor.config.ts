@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.oneroute.app',
   appName: 'One Route',
-  webDir: 'dist/public',
+  webDir: 'dist',
   server: {
     androidScheme: 'https'
     // Removed "url" so it uses bundled build instead of external website
