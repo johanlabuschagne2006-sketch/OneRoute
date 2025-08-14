@@ -3,8 +3,11 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+// Change this to your deployed backend URL
+const backendUrl = "https://auto-share-johanlabuschagn.replit.app";
+
 export default defineConfig({
-  base: "/", // keep as "/" for SPA routing
+  base: "/", // Keep as "/" for SPA routing in Capacitor
   plugins: [
     react(),
     runtimeErrorOverlay(),
@@ -12,7 +15,7 @@ export default defineConfig({
     process.env.REPL_ID !== undefined
       ? [
           await import("@replit/vite-plugin-cartographer").then(
-            (m) => m.cartographer(),
+            (m) => m.cartographer()
           ),
         ]
       : []),
@@ -25,11 +28,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://auto-share-johanlabuschagn.replit.app",
+        target: backendUrl,
         changeOrigin: true,
         secure: false,
       },
     },
   },
 });
+
 
