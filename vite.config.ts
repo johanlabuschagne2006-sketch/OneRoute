@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
-  root: '.',
+  root: '.', // Root of the project
   plugins: [react()],
   resolve: {
     alias: {
@@ -11,9 +11,10 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist/public',
+    outDir: 'dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: path.resolve(__dirname, 'index.html'),
     },
   },
-})
+});
