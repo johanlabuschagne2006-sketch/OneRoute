@@ -1,21 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import path from 'path'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  root: 'client', // 👈 tells Vite to use client as the root folder
+  root: path.resolve(__dirname, 'client'), // Point Vite to your client folder
   build: {
-    outDir: '../dist', // build output goes here
-    emptyOutDir: true,
+    outDir: path.resolve(__dirname, 'dist'), // Output compiled files here
+    emptyOutDir: true, // Clean dist before building
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'client/src'), // so you can do @/filename imports
+      '@': path.resolve(__dirname, 'client/src'), // Optional: allows "@/..." imports
     },
   },
 })
-
-
-
-
