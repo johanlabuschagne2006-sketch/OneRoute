@@ -1,10 +1,9 @@
 /* Import Tailwind 4 base, components, and utilities */
 @import "tailwindcss";
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
 
-
+body {
+  font-family: sans-serif;
+}
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
