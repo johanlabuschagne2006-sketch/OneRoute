@@ -1,9 +1,13 @@
-/* Import Tailwind 4 base, components, and utilities */
-@import "tailwindcss";
+/* Import Tailwind layers in correct order */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
+/* Your custom styles below */
 body {
   font-family: sans-serif;
 }
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
@@ -35,9 +39,12 @@ body {
 .dark {
   --background: hsl(240, 10%, 3.9%);
   --foreground: hsl(0, 0%, 98%);
-  --muted: hsl(240,
+  --muted: hsl(240, 4.8%, 16.5%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+}
 
 .status-cancelled {
   background-color: hsl(0, 93%, 94%);
   color: hsl(0, 93%, 60%);
 }
+
