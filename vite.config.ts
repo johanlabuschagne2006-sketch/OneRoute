@@ -2,17 +2,18 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  root: '.', // index.html stays in root
   plugins: [react()],
-  root: path.resolve(__dirname, 'client'), // Point Vite to your client folder
-  build: {
-    outDir: path.resolve(__dirname, 'dist'), // Output compiled files here
-    emptyOutDir: true, // Clean dist before building
-  },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'client/src'), // Optional: allows "@/..." imports
+      '@': path.resolve(__dirname, 'client/src'), // alias for imports
+    },
+  },
+  build: {
+    outDir: 'dist/public', // where Capacitor expects web files
+    rollupOptions: {
+      input: path.resolve(__dirname, 'index.html'), // use root index.html
     },
   },
 })
